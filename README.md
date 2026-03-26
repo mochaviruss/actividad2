@@ -1,114 +1,88 @@
-# Bot IA con Memoria en Telegram
+# Actividad 2 - Bot IA con memoria
 
-Bot de Telegram con IA que recuerda el contexto de la conversación usando PostgreSQL.
+Bot de Telegram que usa inteligencia artificial para responder mensajes y guarda el historial de conversacion en una base de datos PostgreSQL.
 
-## Stack técnico
+## Como funciona
 
-| Componente | Herramienta | Justificación |
-|---|---|---|
-| Lenguaje | Python 3.11 | Versátil, ideal para IA y automatización |
-| IA | OpenAI GPT-4o-mini | API sencilla, bajo costo |
-| Canal | Telegram Bot | Accesible desde celular sin frontend |
-| Base de datos | PostgreSQL (Supabase) | Relacional, gratuito, guarda historial |
-| Contenerización | Docker | Entorno reproducible |
-| CI/CD | GitHub Actions | Automatiza tests y despliegue |
-| Deploy | Render | Gratuito, conecta directo con GitHub |
+El bot recibe mensajes por Telegram, los guarda en la base de datos junto con el historial previo, y los manda a un modelo de lenguaje (LLaMA via Groq) para generar una respuesta. De esta forma el bot recuerda lo que se habló antes en la conversacion.
 
-## Estructura del proyecto
+## Stack usado
+
+| Componente | Herramienta |
+|---|---|
+| Lenguaje | Python 3.11 |
+| Bot | Telegram |
+| Modelo IA | LLaMA 3 (Groq) |
+| Base de datos | PostgreSQL (Supabase) |
+| Contenedor | Docker |
+| CI/CD | GitHub Actions |
+| Deploy | Render |
+
+## Estructura
 
 ```
-ai-bot/
+actividad2/
 ├── app/
-│   └── main.py          # Lógica del bot
+│   └── main.py
 ├── .github/
 │   └── workflows/
-│       └── ci.yml       # Pipeline CI/CD
-├── Dockerfile           # Contenerización
-├── requirements.txt     # Dependencias Python
-├── .env.example         # Variables de entorno (sin valores reales)
+│       └── ci.yml
+├── Dockerfile
+├── requirements.txt
+├── .env.example
 ├── .gitignore
 └── README.md
 ```
 
-## Configuración paso a paso
+## Configuracion
 
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/TU_USUARIO/ai-bot.git
-cd ai-bot
-```
-
-### 2. Crear el bot en Telegram
-
-1. Abre Telegram y busca `@BotFather`
-2. Escribe `/newbot` y sigue las instrucciones
-3. Guarda el token que te entrega
-
-### 3. Crear la base de datos en Supabase
-
-1. Crea una cuenta en [supabase.com](https://supabase.com)
-2. Crea un proyecto nuevo
-3. Ve a **Settings > Database** y copia la `Connection String (URI)`
-
-### 4. Obtener API Key de OpenAI
-
-1. Ve a [platform.openai.com](https://platform.openai.com)
-2. Crea una API key en **API Keys**
-
-### 5. Configurar variables de entorno
+Primero clonar el repo e instalar dependencias:
 
 ```bash
-cp .env.example .env
-# Edita .env con tus valores reales
+git clone https://github.com/mochaviruss/actividad2.git
+cd actividad2
+pip install -r requirements.txt
 ```
 
-### 6. Ejecutar localmente con Docker
+Crear el archivo `.env` basado en `.env.example` y completar las variables:
+
+```
+TELEGRAM_TOKEN=token del bot (se obtiene con @BotFather en Telegram)
+GROQ_API_KEY=api key de groq.com
+DATABASE_URL=url de conexion de supabase
+```
+
+## Correr localmente
 
 ```bash
-docker build -t ai-bot .
-docker run --env-file .env ai-bot
+python app/main.py
 ```
 
-### 7. Desplegar en Render
+O con Docker:
 
-1. Crea cuenta en [render.com](https://render.com)
-2. **New > Web Service** > conecta tu repo de GitHub
-3. Configuración:
-   - **Environment**: Docker
-   - **Branch**: main
-4. Agrega las variables de entorno en el panel de Render
-5. Copia el **Deploy Hook URL** y agrégalo como secret en GitHub:
-   - GitHub repo > **Settings > Secrets > New secret**
-   - Nombre: `RENDER_DEPLOY_HOOK`
+```bash
+docker build -t actividad2 .
+docker run --env-file .env actividad2
+```
 
-### 8. Activar CI/CD
+## Despliegue en Render
 
-Cada vez que hagas `git push` a `main`:
-- GitHub Actions ejecuta los tests automáticamente
-- Si pasan, dispara el deploy en Render
+1. Crear cuenta en render.com
+2. New > Web Service > conectar el repo
+3. Environment: Docker
+4. Agregar las variables de entorno en el panel
+5. Deploy
 
-## Uso del bot
+El CI/CD esta configurado para que cada push a master ejecute los tests y luego dispare el deploy automaticamente en Render usando un webhook.
 
-| Comando | Función |
+## Comandos del bot
+
+| Comando | Funcion |
 |---|---|
-| `/start` | Saluda e inicia la conversación |
-| `/clear` | Borra el historial del chat |
-| Cualquier texto | Responde con IA recordando el contexto |
+| /start | Inicia la conversacion |
+| /clear | Borra el historial |
+| cualquier texto | Responde con IA |
 
 ## Variables de entorno
 
-| Variable | Descripción |
-|---|---|
-| `TELEGRAM_TOKEN` | Token del bot (de @BotFather) |
-| `OPENAI_API_KEY` | API Key de OpenAI |
-| `DATABASE_URL` | URL de conexión PostgreSQL |
-
-> **Seguridad**: Nunca subas el archivo `.env` al repositorio. Está en `.gitignore`.
-
-## Decisiones técnicas
-
-- Se eligió **Telegram** como canal porque no requiere construir un frontend y funciona perfectamente desde celular.
-- Se usa **GPT-4o-mini** por su bajo costo manteniendo buena calidad.
-- El historial se limita a los últimos **10 mensajes** para no exceder el contexto del modelo.
-- **Supabase** provee PostgreSQL gratuito compatible con el stack propuesto en la actividad.
+Las credenciales nunca se suben al repositorio. El archivo `.env` esta en el `.gitignore`. Para produccion las variables se configuran directamente en el panel de Render.
