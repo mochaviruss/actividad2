@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - run: pip install -r requirimientos.txt
+      - run: pip install -r requerimientos.txt
 
       - run: python -m py_compile app/main.py
 
