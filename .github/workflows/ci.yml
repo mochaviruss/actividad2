@@ -27,4 +27,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: curl -X POST "${{ https://api.render.com/deploy/srv-d72rtl0ule4c73eo3sl0?key=MSjtoj6PMZc }}"
+      - run: curl -X POST "${{ MSjtoj6PMZc }}"
