@@ -28,7 +28,7 @@ actividad2/
 │   └── workflows/
 │       └── ci.yml
 ├── Dockerfile
-├── requirements.txt
+├── requerimientos.txt
 ├── .env.example
 ├── .gitignore
 └── README.md
@@ -41,7 +41,7 @@ Primero clonar el repo e instalar dependencias:
 ```bash
 git clone https://github.com/mochaviruss/actividad2.git
 cd actividad2
-pip install -r requirements.txt
+pip install -r requerimientos.txt
 ```
 
 Crear el archivo `.env` basado en `.env.example` y completar las variables:
