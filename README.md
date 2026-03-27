@@ -29,7 +29,7 @@ actividad2/
 │       └── ci.yml
 ├── Dockerfile
 ├── requerimientos.txt
-├── .env.example
+├── .env
 ├── .gitignore
 └── README.md
 ```
@@ -44,7 +44,7 @@ cd actividad2
 pip install -r requerimientos.txt
 ```
 
-Crear el archivo `.env` basado en `.env.example` y completar las variables:
+Crear el archivo `.env` y completar las variables:
 
 ```
 TELEGRAM_TOKEN=token del bot (se obtiene con @BotFather en Telegram)
